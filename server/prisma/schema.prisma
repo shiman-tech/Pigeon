@@ -1,0 +1,81 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String       @id @default(uuid())
+  googleId  String       @unique
+  email     String       @unique
+  name      String?
+  avatar    String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  batches   EmailBatch[]
+  senders   Sender[]
+}
+
+model Sender {
+  id        String       @id @default(uuid())
+  userId    String?
+  user      User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email     String
+  name      String
+  smtpHost  String?
+  smtpPort  Int?
+  smtpUser  String?
+  smtpPass  String?
+  isDefault Boolean      @default(false)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  batches   EmailBatch[]
+}
+
+model EmailBatch {
+  id            String     @id @default(uuid())
+  userId        String?
+  user          User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  senderId      String?
+  sender        Sender?    @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  name          String?
+  subject       String
+  body          String
+  totalCount    Int        @default(0)
+  sentCount     Int        @default(0)
+  failedCount   Int        @default(0)
+  delaySeconds  Int        @default(2)
+  hourlyLimit   Int        @default(200)
+  scheduledAt   DateTime
+  status        String     @default("PENDING") // PENDING, PROCESSING, COMPLETED, CANCELLED
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  jobs          EmailJob[]
+}
+
+model EmailJob {
+  id             String      @id @default(uuid())
+  batchId        String
+  batch          EmailBatch  @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  recipientEmail String
+  subject        String
+  body           String
+  senderEmail    String
+  senderName     String?
+  scheduledAt    DateTime
+  sentAt         DateTime?
+  status         String      @default("SCHEDULED") // SCHEDULED, PROCESSING, SENT, FAILED, RESCHEDULED, CANCELLED
+  etherealUrl    String?
+  errorMessage   String?
+  retryCount     Int         @default(0)
+  bullmqJobId    String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([batchId])
+}
