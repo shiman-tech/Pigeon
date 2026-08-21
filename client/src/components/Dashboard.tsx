@@ -35,9 +35,9 @@ export default function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const loadScheduled = useCallback(async (search = '') => {
+  const loadScheduled = useCallback(async (search = '', isSilent = false) => {
     try {
-      setLoadingScheduled(true);
+      if (!isSilent) setLoadingScheduled(true);
       const res = await fetchApi<EmailJob[]>(
         `/emails/scheduled?search=${encodeURIComponent(search)}`
       );
@@ -47,13 +47,13 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Failed to fetch scheduled emails:', err);
     } finally {
-      setLoadingScheduled(false);
+      if (!isSilent) setLoadingScheduled(false);
     }
   }, []);
 
-  const loadSent = useCallback(async (search = '') => {
+  const loadSent = useCallback(async (search = '', isSilent = false) => {
     try {
-      setLoadingSent(true);
+      if (!isSilent) setLoadingSent(true);
       const res = await fetchApi<EmailJob[]>(
         `/emails/sent?search=${encodeURIComponent(search)}`
       );
@@ -63,7 +63,7 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Failed to fetch sent emails:', err);
     } finally {
-      setLoadingSent(false);
+      if (!isSilent) setLoadingSent(false);
     }
   }, []);
 
@@ -78,17 +78,17 @@ export default function Dashboard() {
     }
   }, []);
 
-  const refreshAll = async () => {
-    setIsRefreshing(true);
-    await Promise.all([loadScheduled(searchQuery), loadSent(searchQuery), loadStats()]);
-    setIsRefreshing(false);
+  const refreshAll = async (isSilent = false) => {
+    if (!isSilent) setIsRefreshing(true);
+    await Promise.all([loadScheduled(searchQuery, isSilent), loadSent(searchQuery, isSilent), loadStats()]);
+    if (!isSilent) setIsRefreshing(false);
   };
 
   useEffect(() => {
-    refreshAll();
-    // Auto refresh every 4 seconds for live worker updates
+    refreshAll(false);
+    // Auto refresh every 4 seconds for live worker updates (silent background poll)
     const interval = setInterval(() => {
-      refreshAll();
+      refreshAll(true);
     }, 4000);
 
     return () => clearInterval(interval);

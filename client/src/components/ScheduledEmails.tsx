@@ -11,7 +11,7 @@ interface ScheduledEmailsProps {
 }
 
 export default function ScheduledEmails({ jobs, loading, onCancelJob }: ScheduledEmailsProps) {
-  if (loading) {
+  if (loading && jobs.length === 0) {
     return (
       <div className="p-8 space-y-4">
         {[1, 2, 3, 4].map((i) => (

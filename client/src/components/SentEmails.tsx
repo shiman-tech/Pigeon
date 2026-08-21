@@ -10,7 +10,7 @@ interface SentEmailsProps {
 }
 
 export default function SentEmails({ jobs, loading }: SentEmailsProps) {
-  if (loading) {
+  if (loading && jobs.length === 0) {
     return (
       <div className="p-8 space-y-4">
         {[1, 2, 3, 4].map((i) => (
