@@ -51,10 +51,11 @@ export class RateLimiterService {
     const delayUntilNextWindowMs = Math.max(1000, nextHour.getTime() - now.getTime());
 
     if (count > limitPerHour) {
-      // Over limit - do not decrement to keep track of demand pressure, or can be left as is.
+      // Over limit - decrement back so rejected/deferred emails do not consume tokens
+      await redisConnection.decr(key);
       return {
         allowed: false,
-        currentCount: count,
+        currentCount: count - 1,
         limit: limitPerHour,
         delayUntilNextWindowMs,
       };
