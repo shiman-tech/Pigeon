@@ -50,28 +50,49 @@ export async function getOrCreateTransporter(sender?: {
     };
   }
 
-  // Create new Ethereal test account
-  console.log('📬 Creating new Ethereal Email test account...');
-  const testAccount = await nodemailer.createTestAccount();
-  console.log(`✅ Ethereal account ready: ${testAccount.user}`);
+  // Create new Ethereal test account with timeout & fallback
+  console.log('📬 Creating or connecting to Ethereal Email test account...');
+  let transporter: Transporter;
+  let etherealUser = 'test@ethereal.email';
 
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
-    auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
-    },
-  });
+  try {
+    const testAccount = await Promise.race([
+      nodemailer.createTestAccount(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Ethereal test account creation timed out')), 6000))
+    ]);
+    console.log(`✅ Ethereal account ready: ${testAccount.user}`);
+    etherealUser = testAccount.user;
 
-  (transporter as any)._etherealUser = testAccount.user;
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+  } catch (err: any) {
+    console.warn(`⚠️ Ethereal dynamic account generation failed (${err.message}). Using fallback test SMTP account.`);
+    transporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'kurtis.morar@ethereal.email',
+        pass: '65sYQy9Zq4n7fXGjN5',
+      },
+    });
+    etherealUser = 'kurtis.morar@ethereal.email';
+  }
+
+  (transporter as any)._etherealUser = etherealUser;
   transporterCache.set(etherealKey, transporter);
 
   return {
     transporter,
     isEthereal: true,
-    senderEmail: testAccount.user,
+    senderEmail: etherealUser,
   };
 }
 
