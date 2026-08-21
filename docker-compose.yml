@@ -1,0 +1,46 @@
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:./dev.db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=reachinbox_super_secret_jwt_key_2026_scheduler
+      - DEFAULT_DELAY_SECONDS=2
+      - DEFAULT_HOURLY_LIMIT=200
+      - WORKER_CONCURRENCY=5
+      - CLIENT_URL=http://localhost:3000
+    depends_on:
+      - redis
+    volumes:
+      - server_db:/app/prisma
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:5001/api
+        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - server
+
+volumes:
+  redis_data:
+  server_db:
