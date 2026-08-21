@@ -17,7 +17,8 @@ services:
       - DATABASE_URL=file:./dev.db
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - JWT_SECRET=reachinbox_super_secret_jwt_key_2026_scheduler
+      - JWT_SECRET=${JWT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - DEFAULT_DELAY_SECONDS=2
       - DEFAULT_HOURLY_LIMIT=200
       - WORKER_CONCURRENCY=5
@@ -33,7 +34,7 @@ services:
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_API_URL=http://localhost:5001/api
-        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
+        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
     ports:
       - "3000:3000"
     environment:
