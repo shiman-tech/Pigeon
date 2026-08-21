@@ -17,8 +17,8 @@ export default function Header({ onRefresh, isRefreshing }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Left: Brand Logo & Title */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20 ring-1 ring-white/10">
-            <Mail className="w-4 h-4 text-white" />
+          <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md shadow-blue-500/20 ring-1 ring-white/10 bg-slate-950">
+            <img src="/logo.png" alt="Pegion Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
