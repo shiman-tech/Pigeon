@@ -12,7 +12,7 @@ export async function fetchApi<T = any>(
 
   // Get token from localStorage if available
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('reach_auth_token');
+    const token = localStorage.getItem('pigeon_auth_token') || localStorage.getItem('reach_auth_token');
     if (token) {
       defaultHeaders['Authorization'] = `Bearer ${token}`;
     }

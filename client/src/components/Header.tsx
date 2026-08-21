@@ -18,12 +18,12 @@ export default function Header({ onRefresh, isRefreshing }: HeaderProps) {
         {/* Left: Brand Logo & Title */}
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center shadow-md shadow-blue-500/20 ring-1 ring-white/10 bg-slate-950">
-            <img src="/logo.png" alt="Pegion Logo" className="w-full h-full object-cover" />
+            <img src="/logo.png" alt="Pigeon Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-lg text-white tracking-tight">
-                Pegion
+                Pigeon
               </span>
               <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                 Scheduler

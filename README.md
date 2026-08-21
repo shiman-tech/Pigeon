@@ -1,6 +1,6 @@
-# 🚀 Pegion - Full-Stack Email Job Scheduler
+# 🚀 Pigeon - Full-Stack Email Job Scheduler
 
-Pegion is a production-grade, highly resilient email scheduler service and interactive dashboard built with **Node.js, Express, TypeScript, BullMQ, Redis, SQLite/PostgreSQL (via Prisma ORM), Nodemailer (Ethereal SMTP), Next.js 14, and Tailwind CSS**.
+Pigeon is a production-grade, highly resilient email scheduler service and interactive dashboard built with **Node.js, Express, TypeScript, BullMQ, Redis, SQLite/PostgreSQL (via Prisma ORM), Nodemailer (Ethereal SMTP), Next.js 14, and Tailwind CSS**.
 
 ---
 
@@ -84,7 +84,7 @@ NODE_ENV=development
 DATABASE_URL="file:./dev.db" # SQLite local database path
 REDIS_HOST=localhost
 REDIS_PORT=6379
-JWT_SECRET=reachinbox_super_secret_jwt_key_2026_scheduler
+JWT_SECRET=pigeon_super_secret_jwt_key_2026_scheduler
 GOOGLE_CLIENT_ID=your-google-oauth-client-id.apps.googleusercontent.com
 CLIENT_URL=http://localhost:3000
 DEFAULT_DELAY_SECONDS=2
@@ -164,7 +164,7 @@ docker-compose up --build
 
 ### 🎨 Frontend Dashboard UI
 * **Google OAuth Sign-In**: Real credential parsing alongside a sandbox 1-click **Demo Access** fallback.
-* **ReachInbox-Inspired Premium Aesthetics**: Glassmorphic dark layout, custom animations, glowing accents, and responsive layout.
+* **Pigeon-Inspired Premium Aesthetics**: Glassmorphic dark layout, custom animations, glowing accents, and responsive layout.
 * **Lead CSV Parser**: Drag-and-drop file uploader that parses CSV and plain text files, extracting unique valid email addresses and displaying count badges.
 * **Compose Campaign Panel**: Input fields for custom subjects, HTML email bodies, start times, throttle delay sliders, and hourly limits.
 * **Live Refresh Statistics**: Stats cards dynamically poll count totals and current hour rate window usage (`current / limit`).

@@ -16,7 +16,7 @@ export default function LoginPage() {
     try {
       setLoadingDemo(true);
       setError(null);
-      await loginAsDemo('Alex Morgan (Growth Lead)', 'alex.morgan@reachinbox.ai');
+      await loginAsDemo('Alex Morgan (Growth Lead)', 'alex.morgan@pigeon.email');
     } catch (err: any) {
       setError(err.message || 'Demo login failed');
     } finally {
@@ -34,11 +34,11 @@ export default function LoginPage() {
       <header className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-blue-500/20 ring-1 ring-white/20 bg-slate-950">
-            <img src="/logo.png" alt="Pegion Logo" className="w-full h-full object-cover" />
+            <img src="/logo.png" alt="Pigeon Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <span className="font-bold text-xl tracking-tight text-white flex items-center gap-1.5">
-              Pegion
+              Pigeon
               <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Scheduler</span>
             </span>
           </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
-              Sign in to Pegion
+              Sign in to Pigeon
             </h1>
             <p className="text-sm text-slate-400 mb-8 leading-relaxed">
               Scale your cold outreach with high-concurrency BullMQ scheduling, Redis hourly rate-limiting, and Ethereal SMTP delivery.
@@ -149,7 +149,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-slate-500">
-        Pegion Scheduler • BullMQ + Redis + Next.js + Express
+        Pigeon Scheduler • BullMQ + Redis + Next.js + Express
       </footer>
     </div>
   );

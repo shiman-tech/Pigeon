@@ -5,7 +5,7 @@ export const config = {
   port: parseInt(process.env.PORT || '5001', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   clientUrl: process.env.CLIENT_URL || 'http://localhost:3000',
-  jwtSecret: process.env.JWT_SECRET || 'reachinbox_secret_key_2026',
+  jwtSecret: process.env.JWT_SECRET || 'pigeon_secret_key_2026',
   googleClientId: process.env.GOOGLE_CLIENT_ID || '',
   
   redis: {

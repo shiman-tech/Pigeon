@@ -16,9 +16,9 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
       if (process.env.NODE_ENV === 'development' && req.headers['x-demo-user']) {
         req.user = {
           id: 'demo-user-id',
-          email: 'demo@reachinbox.ai',
-          name: 'ReachInbox Demo User',
-          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ReachInbox',
+          email: 'demo@pigeon.email',
+          name: 'Pigeon Demo User',
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Pigeon',
         };
         return next();
       }

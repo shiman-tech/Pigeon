@@ -26,7 +26,7 @@ app.use(cookieParser());
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    service: 'reachinbox-email-scheduler',
+    service: 'pigeon-email-scheduler',
     timestamp: new Date().toISOString(),
   });
 });

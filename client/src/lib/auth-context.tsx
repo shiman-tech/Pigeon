@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (res.token) {
-        localStorage.setItem('reach_auth_token', res.token);
+        localStorage.setItem('pigeon_auth_token', res.token);
       }
       if (res.user) {
         setUser(res.user);
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function loginAsDemo(name = 'ReachInbox Demo User', email = 'demo@reachinbox.ai') {
+  async function loginAsDemo(name = 'Pigeon Demo User', email = 'demo@pigeon.email') {
     try {
       const res = await fetchApi('/auth/demo', {
         method: 'POST',
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (res.token) {
-        localStorage.setItem('reach_auth_token', res.token);
+        localStorage.setItem('pigeon_auth_token', res.token);
       }
       if (res.user) {
         setUser(res.user);
@@ -79,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     } finally {
+      localStorage.removeItem('pigeon_auth_token');
       localStorage.removeItem('reach_auth_token');
       setUser(null);
     }

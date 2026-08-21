@@ -26,7 +26,7 @@ export default function ComposeModal({ isOpen, onClose, onSuccess }: ComposeModa
   const [hourlyLimit, setHourlyLimit] = useState(200);
 
   // Sender details
-  const [senderName, setSenderName] = useState('Pegion Campaign');
+  const [senderName, setSenderName] = useState('Pigeon Campaign');
   const [senderEmail, setSenderEmail] = useState('');
 
   const [submitting, setSubmitting] = useState(false);

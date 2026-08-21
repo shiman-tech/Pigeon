@@ -81,7 +81,7 @@ export class AuthController {
         await prisma.sender.create({
           data: {
             userId: user.id,
-            name: `${user.name || 'ReachInbox User'}`,
+            name: `${user.name || 'Pigeon User'}`,
             email: user.email,
             isDefault: true,
           },
@@ -132,8 +132,8 @@ export class AuthController {
    */
   public static async demoLogin(req: Request, res: Response) {
     try {
-      const email = req.body.email || 'demo@reachinbox.ai';
-      const name = req.body.name || 'ReachInbox Demo User';
+      const email = req.body.email || 'demo@pigeon.email';
+      const name = req.body.name || 'Pigeon Demo User';
       const googleId = `demo_${email}`;
       const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
 
@@ -156,7 +156,7 @@ export class AuthController {
         await prisma.sender.create({
           data: {
             userId: user.id,
-            name: user.name || 'ReachInbox Sender',
+            name: user.name || 'Pigeon Sender',
             email: user.email,
             isDefault: true,
           },

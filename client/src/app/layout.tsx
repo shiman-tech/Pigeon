@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pegion | Production-Grade Email Job Scheduler",
+  title: "Pigeon | Production-Grade Email Job Scheduler",
   description: "Schedule cold email dispatches with BullMQ, Redis hourly rate limits, and Ethereal preview delivery.",
 };
 

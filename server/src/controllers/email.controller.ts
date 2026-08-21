@@ -53,8 +53,8 @@ export class EmailController {
         sender = await prisma.sender.findFirst({ where: { userId, isDefault: true } });
       }
 
-      const senderEmail = customSenderEmail || sender?.email || req.user?.email || 'reachinbox@ethereal.email';
-      const senderName = customSenderName || sender?.name || req.user?.name || 'Pegion Team';
+      const senderEmail = customSenderEmail || sender?.email || req.user?.email || 'pigeon@ethereal.email';
+      const senderName = customSenderName || sender?.name || req.user?.name || 'Pigeon Team';
 
       const baseScheduleTime = scheduledAtStr ? new Date(scheduledAtStr) : new Date();
 

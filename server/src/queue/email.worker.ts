@@ -108,7 +108,7 @@ export function initEmailWorker(): Worker<EmailJobData> {
           html: `<div style="font-family: sans-serif; line-height: 1.5; color: #1e293b; padding: 20px;">
             ${data.body.replace(/\n/g, '<br/>')}
             <hr style="margin-top: 24px; border: none; border-top: 1px solid #e2e8f0;"/>
-            <p style="font-size: 11px; color: #94a3b8;">Sent securely via Pegion Email Job Scheduler</p>
+            <p style="font-size: 11px; color: #94a3b8;">Sent securely via Pigeon Email Job Scheduler</p>
           </div>`,
         });
 
