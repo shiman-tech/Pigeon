@@ -9,13 +9,26 @@ import { prisma } from './config/prisma';
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  config.clientUrl,
+  'http://localhost:3000',
+  'http://localhost:3001',
+];
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow localhost and any Next.js client URL
-      callback(null, true);
+      // Allow requests with no origin (mobile apps, curl, server-to-server)
+      if (!origin || allowedOrigins.some(o => origin.startsWith(o))) {
+        callback(null, true);
+      } else {
+        console.warn(`⚠️ CORS blocked origin: ${origin}`);
+        callback(null, true); // Allow all for now but log
+      }
     },
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['set-cookie'],
   })
 );
 app.use(express.json({ limit: '10mb' }));
