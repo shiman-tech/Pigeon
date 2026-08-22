@@ -316,16 +316,22 @@ export class EmailController {
         prisma.emailJob.count({ where: { status: 'RESCHEDULED', batch: { userId } } }),
       ]);
 
-      const senderEmail = req.user?.email || 'default_sender';
-      let currentHourCount = await RateLimiterService.getCurrentCount(senderEmail);
+      // Rate limit count from Redis — gracefully degrade if Redis is unreachable
+      let currentHourCount = 0;
+      try {
+        const senderEmail = req.user?.email || 'default_sender';
+        currentHourCount = await RateLimiterService.getCurrentCount(senderEmail);
 
-      // Fallback check if user has a DB sender ID key
-      if (currentHourCount === 0 && req.user?.id) {
-        const userSender = await prisma.sender.findFirst({ where: { userId: req.user.id } });
-        if (userSender?.id) {
-          const countBySenderId = await RateLimiterService.getCurrentCount(userSender.id);
-          if (countBySenderId > 0) currentHourCount = countBySenderId;
+        // Fallback check if user has a DB sender ID key
+        if (currentHourCount === 0 && req.user?.id) {
+          const userSender = await prisma.sender.findFirst({ where: { userId: req.user.id } });
+          if (userSender?.id) {
+            const countBySenderId = await RateLimiterService.getCurrentCount(userSender.id);
+            if (countBySenderId > 0) currentHourCount = countBySenderId;
+          }
         }
+      } catch (redisErr: any) {
+        console.warn('⚠️ [Stats] Redis rate limit query failed, defaulting to 0:', redisErr.message);
       }
 
       return res.status(200).json({
@@ -340,6 +346,7 @@ export class EmailController {
         },
       });
     } catch (err: any) {
+      console.error('❌ [Stats] Error:', err.message);
       return res.status(500).json({ success: false, message: err.message });
     }
   }
