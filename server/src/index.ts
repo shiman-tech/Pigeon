@@ -9,28 +9,17 @@ import { prisma } from './config/prisma';
 const app = express();
 
 // Middleware
-const allowedOrigins = [
-  config.clientUrl,
-  'http://localhost:3000',
-  'http://localhost:3001',
-];
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, server-to-server)
-      if (!origin || allowedOrigins.some(o => origin.startsWith(o))) {
-        callback(null, true);
-      } else {
-        console.warn(`⚠️ CORS blocked origin: ${origin}`);
-        callback(null, true); // Allow all for now but log
-      }
-    },
+    origin: true,
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With', 'Accept'],
     exposedHeaders: ['set-cookie'],
   })
 );
+app.options('*', cors({ origin: true, credentials: true }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());

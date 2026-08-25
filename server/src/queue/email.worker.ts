@@ -3,7 +3,7 @@ import { createRedisConnection } from '../config/redis';
 import { config } from '../config';
 import { prisma } from '../config/prisma';
 import { EmailJobData } from '../types';
-import { getOrCreateTransporter, getEtherealPreviewUrl } from '../services/mailer.service';
+import { dispatchEmail } from '../services/mailer.service';
 import { RateLimiterService } from '../services/rate-limiter.service';
 import { rescheduleDelayedJob } from './email.queue';
 
@@ -86,40 +86,21 @@ export function initEmailWorker(): Worker<EmailJobData> {
         await sleep(delayBetweenSends);
       }
 
-      // 5. Send Email via Transporter
+      // 5. Send Email via Dispatcher
       try {
-        const { transporter, isEthereal, senderEmail } = await getOrCreateTransporter({
-          smtpHost: data.smtpHost,
-          smtpPort: data.smtpPort,
-          smtpUser: data.smtpUser,
-          smtpPass: data.smtpPass,
-          email: data.senderEmail,
-        });
-
-        const fromAddress = data.senderName
-          ? `"${data.senderName}" <${senderEmail}>`
-          : senderEmail;
-
-        const info = await transporter.sendMail({
-          from: fromAddress,
-          to: data.recipientEmail,
+        const dispatchResult = await dispatchEmail({
+          sender: {
+            smtpHost: data.smtpHost,
+            smtpPort: data.smtpPort,
+            smtpUser: data.smtpUser,
+            smtpPass: data.smtpPass,
+            email: data.senderEmail,
+          },
+          senderName: data.senderName,
+          recipientEmail: data.recipientEmail,
           subject: data.subject,
-          text: data.body,
-          html: `<div style="font-family: sans-serif; line-height: 1.5; color: #1e293b; padding: 20px;">
-            ${data.body.replace(/\n/g, '<br/>')}
-            <hr style="margin-top: 24px; border: none; border-top: 1px solid #e2e8f0;"/>
-            <p style="font-size: 11px; color: #94a3b8;">Sent securely via Pigeon Email Job Scheduler</p>
-          </div>`,
+          body: data.body,
         });
-
-        let previewUrl: string | null = null;
-        if (isEthereal) {
-          const testUrl = getEtherealPreviewUrl(info);
-          if (testUrl) {
-            previewUrl = testUrl;
-            console.log(`🔗 [Ethereal Preview URL]: ${previewUrl}`);
-          }
-        }
 
         // 6. Update DB record to SENT
         await prisma.emailJob.update({
@@ -127,7 +108,7 @@ export function initEmailWorker(): Worker<EmailJobData> {
           data: {
             status: 'SENT',
             sentAt: new Date(),
-            etherealUrl: previewUrl,
+            etherealUrl: dispatchResult.previewUrl,
             errorMessage: null,
           },
         });
@@ -140,8 +121,8 @@ export function initEmailWorker(): Worker<EmailJobData> {
           },
         });
 
-        console.log(`🎉 [Worker] Email successfully sent to <${data.recipientEmail}>! Message ID: ${info.messageId}`);
-        return { success: true, messageId: info.messageId, previewUrl };
+        console.log(`🎉 [Worker] Email successfully sent to <${data.recipientEmail}>! Message ID: ${dispatchResult.messageId}`);
+        return { success: true, messageId: dispatchResult.messageId, previewUrl: dispatchResult.previewUrl };
       } catch (err: any) {
         console.error(`💥 [Worker] Failed to send email to <${data.recipientEmail}>:`, err.message);
 
