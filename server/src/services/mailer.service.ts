@@ -65,29 +65,23 @@ export async function getOrCreateTransporter(sender?: {
 
     transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         user: testAccount.user,
         pass: testAccount.pass,
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
     });
   } catch (err: any) {
     console.warn(`⚠️ Ethereal dynamic account generation failed (${err.message}). Using fallback test SMTP account.`);
     transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
-      port: 465,
-      secure: true,
+      port: 587,
+      secure: false,
       auth: {
         user: 'kurtis.morar@ethereal.email',
         pass: '65sYQy9Zq4n7fXGjN5',
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
     });
     etherealUser = 'kurtis.morar@ethereal.email';
   }
